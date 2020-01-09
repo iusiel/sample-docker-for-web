@@ -1,0 +1,40 @@
+version: "3.2"
+services:
+  php:
+    build: './docker/php/'
+    networks:
+      - backend
+    volumes:
+      - ./app:/var/www/html/
+  mysql:
+    image: mysql:5.7.28
+    networks:
+      - backend
+    volumes:
+      - ./database/:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    tty: true
+  web:
+    build: './docker/nginx/'
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/:/var/www/html/
+      - ./docker/nginx/project.local.conf:/etc/nginx/conf.d/project.local.conf
+  node:
+    build: './docker/node/'
+    depends_on:
+      - web
+    volumes:
+      - ./app:/var/www/html/
+    tty: true
+networks:
+  frontend:
+  backend:
