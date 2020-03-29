@@ -33,7 +33,7 @@ services:
       - "80:80"
     volumes:
       - ./:/var/www/html/
-      - ./docker/nginx/project.local.conf:/etc/nginx/conf.d/project.local.conf
+      - ./docker/nginx/localhost.conf:/etc/nginx/conf.d/localhost.conf
   node:
     build: './docker/node/'
     user: 1000:1000
