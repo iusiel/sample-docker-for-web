@@ -1,3 +1,5 @@
+# README NOT YET UPDATED. INFORMATION BELOW MAYBE INACCURATE
+
 # Sample Docker for Web
 
 1. Contains 2 main folders. app and docker

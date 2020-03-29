@@ -2,14 +2,13 @@ version: "3.2"
 services:
   php:
     build: './docker/php/'
-    user: 1000:1000
+    user: $UID:$GID
     networks:
       - backend
     volumes:
       - ./:/var/www/html/
   database:
     image: mariadb:10.4.12
-    user: 1000:1000
     networks:
       - backend
     volumes:
@@ -22,7 +21,6 @@ services:
     tty: true
   web:
     build: './docker/nginx/'
-    user: 1000:1000
     depends_on:
       - php
       - database
@@ -36,7 +34,7 @@ services:
       - ./docker/nginx/localhost.conf:/etc/nginx/conf.d/localhost.conf
   node:
     build: './docker/node/'
-    user: 1000:1000
+    user: $UID:$GID
     depends_on:
       - web
     volumes:
