@@ -2,38 +2,45 @@ version: "3.2"
 services:
   php:
     build: './docker/php/'
+    user: 1000:1000
     networks:
       - backend
     volumes:
-      - ./app:/var/www/html/
-  mysql:
-    image: mysql:5.7.28
+      - ./:/var/www/html/
+  database:
+    image: mariadb:10.4.12
+    user: 1000:1000
     networks:
       - backend
     volumes:
-      - ./database/:/var/lib/mysql/
+      - ./mariadb_persistent/:/var/lib/mysql/
     environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=database
       - MYSQL_ROOT_PASSWORD=rootpassword
     tty: true
   web:
     build: './docker/nginx/'
+    user: 1000:1000
     depends_on:
       - php
-      - mysql
+      - database
     networks:
       - frontend
       - backend
     ports:
       - "80:80"
     volumes:
-      - ./app/:/var/www/html/
+      - ./:/var/www/html/
       - ./docker/nginx/project.local.conf:/etc/nginx/conf.d/project.local.conf
   node:
     build: './docker/node/'
+    user: 1000:1000
     depends_on:
       - web
     volumes:
-      - ./app:/var/www/html/
+      - ./:/var/www/html/
     tty: true
 networks:
   frontend:
